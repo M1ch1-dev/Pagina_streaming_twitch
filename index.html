@@ -4,50 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stream En Vivo</title>
-  <!-- hls.js para reproducción de video -->
+  <!-- Librería para reproducir el video HLS de tu servidor -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { display: flex; height: 100vh; background-color: #0e0e10; color: #efeff1; font-family: sans-serif; }
+    body { display: flex; height: 100vh; background-color: #0e0e10; color: #efeff1; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
     
-    /* Layout principal estilo Twitch */
+    /* Reproductor de Video */
     #player-container { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; }
     video { width: 100%; height: 100%; max-height: 100vh; }
     
-    #chat-container { width: 340px; background: #18181b; border-left: 1px solid #2f2f35; display: flex; flex-direction: column; }
-    #chat-header { padding: 12px; border-bottom: 1px solid #2f2f35; font-weight: bold; text-align: center; }
-    #chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-    
-    .message { font-size: 14px; line-height: 1.4; word-break: break-word; }
-    .username { font-weight: bold; color: #a970ff; margin-right: 6px; }
-    .emote { height: 28px; vertical-align: middle; margin: 0 2px; }
-
-    #chat-input-container { padding: 10px; border-top: 1px solid #2f2f35; display: flex; gap: 5px; }
-    #chat-input { flex: 1; padding: 8px; background: #1f1f23; border: 1px solid #3a3a3d; border-radius: 4px; color: #fff; }
-    #send-btn { padding: 8px 12px; background: #9146ff; border: none; border-radius: 4px; color: #fff; font-weight: bold; cursor: pointer; }
+    /* Contenedor del Chat de Twitch */
+    #chat-container { width: 340px; height: 100vh; background: #18181b; border-left: 1px solid #2f2f35; }
+    iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
 
-  <!-- Contenedor del Reproductor de Video -->
+  <!-- 1. REPRODUCTOR DE VIDEO -->
   <div id="player-container">
     <video id="video" controls autoplay muted></video>
   </div>
 
-  <!-- Contenedor del Chat con Emotes -->
+  <!-- 2. CHAT OFICIAL DE TWITCH (Muestra lo que se habla en tiempo real) -->
   <div id="chat-container">
-    <div id="chat-header">CHAT EN VIVO</div>
-    <div id="chat-messages"></div>
-    <div id="chat-input-container">
-      <input type="text" id="chat-input" placeholder="Escribe un mensaje o usa un emote..." />
-      <button id="send-btn" onclick="sendMessage()">Enviar</button>
-    </div>
+    <iframe 
+      src="https://www.twitch.tv/embed/TU_CANAL_DE_TWITCH/chat?parent=github.io&darkpopout"
+      height="100%"
+      width="100%">
+    </iframe>
   </div>
 
   <script>
-    // 1. CONFIGURACIÓN DEL REPRODUCTOR VIDEO
+    // Enlace a la transmisión de tu servidor de video
     const video = document.getElementById('video');
-    // Sustituye IP_DE_TU_ORACLE por la IP pública de tu servidor
     const videoSrc = 'http://IP_DE_TU_ORACLE:8080/live/index.m3u8';
 
     if (Hls.isSupported()) {
@@ -56,43 +47,6 @@
       hls.attachMedia(video);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = videoSrc;
-    }
-
-    // 2. SISTEMA DE EMOTES CARGADOS POR TI
-    // Puedes mapear palabras clave con URLs de imágenes de tus emotes
-    const customEmotes = {
-      "Pog": "https://pogchamp.com/pog.png",
-      "Kekw": "https://example.com/emotes/kekw.png",
-      "AnimeJoy": "https://example.com/emotes/animejoy.png"
-    };
-
-    function processEmotes(text) {
-      let words = text.split(" ");
-      let processedWords = words.map(word => {
-        if (customEmotes[word]) {
-          return `<img class="emote" src="${customEmotes[word]}" alt="${word}">`;
-        }
-        return word;
-      });
-      return processedWords.join(" ");
-    }
-
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const chatMessages = document.getElementById('chat-messages');
-      const msgDiv = document.createElement('div');
-      msgDiv.className = 'message';
-      
-      // Procesa el texto e inyecta las imágenes de los emotes
-      const formattedText = processEmotes(text);
-      msgDiv.innerHTML = `<span class="username">Viewer:</span> ${formattedText}`;
-      
-      chatMessages.appendChild(msgDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-      input.value = '';
     }
   </script>
 </body>
