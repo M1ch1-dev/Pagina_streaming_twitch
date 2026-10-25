@@ -4,50 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stream En Vivo</title>
-  <!-- Librería para reproducir el video HLS de tu servidor -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { display: flex; height: 100vh; background-color: #0e0e10; color: #efeff1; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
     
-    /* Reproductor de Video */
-    #player-container { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; }
-    video { width: 100%; height: 100%; max-height: 100vh; }
+    /* Contenedor del Video (VDO.ninja capturando la transmisión) */
+    #player-container { flex: 1; background: #000; }
     
-    /* Contenedor del Chat de Twitch */
+    /* Contenedor del Chat Oficial de Twitch */
     #chat-container { width: 340px; height: 100vh; background: #18181b; border-left: 1px solid #2f2f35; }
     iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
 
-  <!-- 1. REPRODUCTOR DE VIDEO -->
+  <!-- 1. REPRODUCTOR DE VIDEO (Reemplaza la URL con la de VDO.ninja) -->
   <div id="player-container">
-    <video id="video" controls autoplay muted></video>
-  </div>
-
-  <!-- 2. CHAT OFICIAL DE TWITCH (Muestra lo que se habla en tiempo real) -->
-  <div id="chat-container">
     <iframe 
-      src="https://www.twitch.tv/embed/TU_CANAL_DE_TWITCH/chat?parent=github.io&darkpopout"
-      height="100%"
-      width="100%">
+      src="https://vdo.ninja/?view=CFa2xsk" 
+      allow="autoplay; camera; microphone">
     </iframe>
   </div>
 
-  <script>
-    // Enlace a la transmisión de tu servidor de video
-    const video = document.getElementById('video');
-    const videoSrc = 'http://IP_DE_TU_ORACLE:8080/live/index.m3u8';
+  <!-- 2. CHAT OFICIAL DE TWITCH -->
+  <div id="chat-container">
+    <iframe 
+      src="https://www.twitch.tv/embed/TU_CANAL_DE_TWITCH/chat?parent=TU_USUARIO.github.io&darkpopout">
+    </iframe>
+  </div>
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = videoSrc;
-    }
-  </script>
 </body>
 </html>
