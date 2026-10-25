@@ -2,27 +2,80 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Stream En Vivo</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { display: flex; height: 100vh; background-color: #0e0e10; color: #efeff1; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+    body { 
+      display: flex; 
+      height: 100vh; 
+      width: 100vw;
+      background-color: #0e0e10; 
+      color: #efeff1; 
+      font-family: system-ui, -apple-system, sans-serif; 
+      overflow: hidden; 
+    }
     
-    /* Contenedor del Video (VDO.ninja capturando la transmisión) */
-    #player-container { flex: 1; background: #000; }
+    /* Reproductor de Video (Ocupa el espacio principal) */
+    #player-container { 
+      flex: 1; 
+      background: #000; 
+      height: 100%;
+      position: relative;
+    }
     
-    /* Contenedor del Chat Oficial de Twitch */
-    #chat-container { width: 340px; height: 100vh; background: #18181b; border-left: 1px solid #2f2f35; }
-    iframe { width: 100%; height: 100%; border: none; }
+    /* Chat de Twitch (Ancho fijo en PC) */
+    #chat-container { 
+      width: 320px; 
+      height: 100%; 
+      background: #18181b; 
+      border-left: 1px solid #2f2f35; 
+      flex-shrink: 0;
+    }
+
+    iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+    }
+
+    /* === AJUSTES PARA TELÉFONOS DE COSTADO (HORIZONTAL / LANDSCAPE) === */
+    @media (max-width: 900px) and (orientation: landscape) {
+      /* Le da el 80% de la pantalla al video y solo el 20% al chat */
+      #player-container {
+        flex: 1;
+      }
+      #chat-container {
+        width: 220px; /* Chat ultra compacto */
+      }
+    }
+
+    /* === AJUSTES PARA TELÉFONOS DE PIE (VERTICAL / PORTRAIT) === */
+    @media (max-width: 768px) and (orientation: portrait) {
+      body {
+        flex-direction: column; /* Pone el video arriba y el chat abajo */
+      }
+      #player-container {
+        height: 35vh; /* Video ocupa el 35% superior */
+        width: 100%;
+      }
+      #chat-container {
+        width: 100%;
+        height: 65vh; /* Chat ocupa el resto de la pantalla abajo */
+        border-left: none;
+        border-top: 1px solid #2f2f35;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- 1. REPRODUCTOR DE VIDEO (Reemplaza la URL con la de VDO.ninja) -->
+  <!-- 1. REPRODUCTOR DE VIDEO (VDO.ninja con ID fijo) -->
   <div id="player-container">
     <iframe 
       src="https://vdo.ninja/?view=CFa2xsk" 
-      allow="autoplay; camera; microphone">
+      allow="autoplay; camera; microphone; audio; fullscreen"
+      allowfullscreen="true">
     </iframe>
   </div>
 
